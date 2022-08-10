@@ -1,3 +1,4 @@
+import 'package:eight_queens_puzzle/ui/screens/chessboard/widgets/chessboard_widgets.dart';
 import 'package:flutter/material.dart';
 
 class ChessboardScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
           crossAxisCount: 8,
           children: List.generate(
             64,
-                (i) {
+            (i) {
               /// The first tile of every new row is always the opposite of
               /// the first tile of the previous row.
               /// This is achieved by keeping track of the current row in the
@@ -36,17 +37,12 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
                 row = i ~/ 8 + 1;
               }
 
-              if (row.isOdd) {
-                if (i % 2 == 0) {
-                  return Container(color: Colors.white);
-                }
-                return Container(color: Colors.black);
-              } else {
-                if (i % 2 == 0) {
-                  return Container(color: Colors.black);
-                }
-                return Container(color: Colors.white);
-              }
+              final lightTile =
+                  row.isOdd && i % 2 == 0 || row.isEven && i % 2 != 0;
+
+              return Field(
+                color: lightTile ? const Color(0xffF1D9B5) : const Color(0xffB58965),
+              );
             },
           ),
         ),
