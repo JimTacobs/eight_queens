@@ -1,9 +1,8 @@
-import 'package:eight_queens_puzzle/core/enums/enums.dart';
 import 'package:eight_queens_puzzle/util/state/state.dart';
 
 import '../../core/models/models.dart';
 
-Queen calculateFields(int queen) {
+Queen calculateThreatenedFields(int queen) {
   List<int> horizontal;
   List<int> vertical;
   List<int> diagonalDescending;
@@ -21,11 +20,5 @@ Queen calculateFields(int queen) {
   return Queen(
     location: queen,
     threatenedFields: threatenedFields,
-    directions: [
-      {Directions.horizontal: horizontal},
-      {Directions.vertical: vertical},
-      {Directions.diagonalAscending: diagonalAscending},
-      {Directions.diagonalDescending: diagonalDescending},
-    ],
   );
 }
