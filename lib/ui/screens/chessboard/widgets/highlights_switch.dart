@@ -13,12 +13,17 @@ class HighlightsSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final theme = Theme.of(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * .02),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Highlight threatened fields'),
+           Text(
+            'Highlight threatened fields',
+            style: theme.textTheme.bodyMedium,
+          ),
           Switch(
             value: highlightFields,
             onChanged: (val) {

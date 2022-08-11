@@ -22,7 +22,7 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
 
   @override
   void initState() {
-    /// Preload our svg image so it doesn't have to be fetched from our assets
+    /// Preload our svg image so it doesn't have to be fetched from the assets
     /// when the user selects their first tile.
     precachePicture(
       ExactAssetPicture(
@@ -108,8 +108,10 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
         title: const Text('8 Queens Puzzle'),
         centerTitle: true,
       ),
+      backgroundColor: Colors.brown.shade200,
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(
