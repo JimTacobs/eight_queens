@@ -1,6 +1,6 @@
 import '../../core/models/models.dart';
 
-List<int> calculateInvalidFields(List<Queen> queens, int invalidQueen) {
+List<int> calculateConflictedFields(List<Queen> queens, int invalidQueen) {
   /// The index of the invalidQueen can be found in the threatenedFields of one
   /// or more queens.
   final attackingQueens = queens

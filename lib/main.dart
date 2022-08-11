@@ -1,5 +1,6 @@
-import 'package:eight_queens_puzzle/ui/screens/chessboard/chessboard_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'ui/screens/chessboard/chessboard_screen.dart';
 
 void main() {
   runApp(const MyApp());

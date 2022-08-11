@@ -1,6 +1,5 @@
-import 'package:eight_queens_puzzle/util/state/state.dart';
-
 import '../../core/models/models.dart';
+import 'state.dart';
 
 Queen calculateThreatenedFields(int queen) {
   List<int> horizontal;

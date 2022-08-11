@@ -1,8 +1,8 @@
-import 'package:eight_queens_puzzle/ui/screens/chessboard/widgets/chessboard_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/models.dart';
 import '../../../util/state/state.dart';
+import 'widgets/chessboard_widgets.dart';
 
 class ChessboardScreen extends StatefulWidget {
   const ChessboardScreen({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
   List<int> threatenedFields = [];
   List<int> queenLocations = [];
   List<Queen> queens = [];
-  List<int> invalidFields = [];
+  List<int> conflictedFields = [];
 
   bool highlightFields = false;
 
@@ -26,15 +26,50 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
 
     int row = 1;
 
+    void resetBoard() {
+      setState(() {
+        threatenedFields = [];
+        queenLocations = [];
+        queens = [];
+        conflictedFields = [];
+      });
+    }
+
     void checkValidity() {
-      invalidFields = [];
+      conflictedFields = [];
       for (final queen in queenLocations) {
         if (threatenedFields.contains(queen)) {
-          invalidFields =
-              (invalidFields + calculateInvalidFields(queens, queen));
+          conflictedFields =
+              (conflictedFields + calculateConflictedFields(queens, queen));
         }
       }
-      threatenedFields.toSet().toList();
+      conflictedFields.toSet().toList();
+
+      if (conflictedFields.isEmpty && queenLocations.length == 8) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('A winner is you!'),
+                content: const Text('Goed hoor, heel knap!'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      resetBoard();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Opnieuw!'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Hoezee!'),
+                  ),
+                ],
+              );
+            });
+      }
     }
 
     void setQueenCallback(int newQueen) {
@@ -71,6 +106,10 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('8 Queens Puzzle'),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -108,7 +147,8 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
                         tileNumber: tileNumber,
                         hasQueen: queenLocations.contains(tileNumber),
                         isThreatened: threatenedFields.contains(tileNumber),
-                        attacksOtherQueen: invalidFields.contains(tileNumber),
+                        attacksOtherQueen:
+                            conflictedFields.contains(tileNumber),
                         highlightThreatenedFields: highlightFields,
                         setQueenCb: setQueenCallback,
                         removeQueenCb: removeQueenCallback,
@@ -121,6 +161,14 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
             HighlightsSwitch(
               highlightFields: highlightFields,
               toggleCb: toggleHighlightsCb,
+            ),
+            Center(
+              child: ElevatedButton(
+                child: const Text('Reset'),
+                onPressed: () {
+                  resetBoard();
+                },
+              ),
             ),
           ],
         ),
