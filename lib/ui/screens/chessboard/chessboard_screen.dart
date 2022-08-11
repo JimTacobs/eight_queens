@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/models/models.dart';
 import '../../../util/state/state.dart';
@@ -18,6 +19,20 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
   List<int> conflictedFields = [];
 
   bool highlightFields = false;
+
+  @override
+  void initState() {
+    /// Preload our svg image so it doesn't have to be fetched from our assets
+    /// when the user selects their first tile.
+    precachePicture(
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/images/queen.svg',
+      ),
+      null,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,28 +62,11 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
 
       if (conflictedFields.isEmpty && queenLocations.length == 8) {
         showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('A winner is you!'),
-                content: const Text('Goed hoor, heel knap!'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      resetBoard();
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Opnieuw!'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Hoezee!'),
-                  ),
-                ],
-              );
-            });
+          context: context,
+          builder: (BuildContext context) {
+            return PuzzleCompleteDialog(resetBoardCb: resetBoard);
+          },
+        );
       }
     }
 
