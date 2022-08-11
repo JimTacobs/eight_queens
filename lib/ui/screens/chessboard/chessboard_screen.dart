@@ -1,6 +1,9 @@
 import 'package:eight_queens_puzzle/ui/screens/chessboard/widgets/chessboard_widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/models/models.dart';
+import '../../../util/state/state.dart';
+
 class ChessboardScreen extends StatefulWidget {
   const ChessboardScreen({Key? key}) : super(key: key);
 
@@ -9,12 +12,31 @@ class ChessboardScreen extends StatefulWidget {
 }
 
 class _ChessboardScreenState extends State<ChessboardScreen> {
+  List<int> threatenedFields = [];
+  List<int> queenLocations = [];
+  List<Queen> queens = [];
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     int row = 1;
+
+    void setQueenCallback(int newQueen) {
+      setState(() {
+        queens.add(calculateFields(newQueen));
+        threatenedFields = (threatenedFields + queens.last.threatenedFields)
+          ..sort();
+        queenLocations.add(newQueen);
+      });
+    }
+
+    void removeQueenCallback(int placedQueen) {
+      setState(() {
+        queenLocations.remove(placedQueen);
+      });
+    }
 
     return Scaffold(
       body: Padding(
@@ -39,9 +61,16 @@ class _ChessboardScreenState extends State<ChessboardScreen> {
 
               final lightTile =
                   row.isOdd && i % 2 == 0 || row.isEven && i % 2 != 0;
+              final tileNumber = i + 1;
 
               return Field(
-                color: lightTile ? const Color(0xffF1D9B5) : const Color(0xffB58965),
+                color: lightTile
+                    ? const Color(0xffF1D9B5)
+                    : const Color(0xffB58965),
+                tileNumber: tileNumber,
+                hasQueen: queenLocations.contains(tileNumber),
+                setQueenCb: setQueenCallback,
+                removeQueenCb: removeQueenCallback,
               );
             },
           ),
